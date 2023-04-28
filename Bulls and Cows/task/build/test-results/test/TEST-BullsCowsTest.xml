@@ -1,39 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="BullsCowsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-04-13T22:04:46" hostname="DESKTOP-LMD33II" time="0.082">
+<testsuite name="BullsCowsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-04-28T23:01:29" hostname="DESKTOP-LMD33II" time="0.088">
   <properties/>
-  <testcase name="start" classname="BullsCowsTest" time="0.082"/>
+  <testcase name="start" classname="BullsCowsTest" time="0.088"/>
   <system-out><![CDATA[?[1;31m
 Start test 1?[0m
-The secret code is prepared: ****.
-
-Turn 1. Answer:
-1234
-Grade: 1 cow.
-
-Turn 2. Answer:
-5678
-Grade: 1 cow.
-
-Turn 3. Answer:
-9012
-Grade: 1 bull and 1 cow.
-
-Turn 4. Answer:
-9087
-Grade: 1 bull and 1 cow.
-
-Turn 5. Answer:
-1087
-Grade: 1 cow.
-
-Turn 6. Answer:
-9205
-Grade: 3 bulls.
-
-Turn 7. Answer:
-9305
+> 3601
+Grade: 1 bull(s) 1 cow(s). The secret code is 9305.
+?[0;34mWhy 9305? Make your own secret number :)
+?[1;31m
+Start test 2?[0m
+> 9305
 Grade: 4 bulls.
-Congrats! The secret code is 9305.
+?[0;34mWhy 9305? Make your own secret number :)
+?[1;31m
+Start test 3?[0m
+> 1246
+Grade: None. The secret code is 9305.
+?[0;34mWhy 9305? Make your own secret number :)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

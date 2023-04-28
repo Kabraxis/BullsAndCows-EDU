@@ -1,36 +1,58 @@
 package bullscows;
 
+import java.util.Scanner;
+
 public class Main {
+    static int turn = 1;
+    static final int indexBulls = 0;
+    static final int indexCows = 1;
+    static final int winBulls = 4;
+    static String secretINP = "9305";
+
     public static void main(String[] args) {
-        System.out.println("The secret code is prepared: ****.\n" +
-                "\n" +
-                "Turn 1. Answer:\n" +
-                "1234\n" +
-                "Grade: 1 cow.\n" +
-                "\n" +
-                "Turn 2. Answer:\n" +
-                "5678\n" +
-                "Grade: 1 cow.\n" +
-                "\n" +
-                "Turn 3. Answer:\n" +
-                "9012\n" +
-                "Grade: 1 bull and 1 cow.\n" +
-                "\n" +
-                "Turn 4. Answer:\n" +
-                "9087\n" +
-                "Grade: 1 bull and 1 cow.\n" +
-                "\n" +
-                "Turn 5. Answer:\n" +
-                "1087\n" +
-                "Grade: 1 cow.\n" +
-                "\n" +
-                "Turn 6. Answer:\n" +
-                "9205\n" +
-                "Grade: 3 bulls.\n" +
-                "\n" +
-                "Turn 7. Answer:\n" +
-                "9305\n" +
-                "Grade: 4 bulls.\n" +
-                "Congrats! The secret code is 9305.");
+        run();
     }
+
+    protected static void run() {
+        char[] secret = secretINP.toCharArray();
+        // Getting input from a different method seems to prevent from unwanted prompts for input.
+        String guessINP = getInput();
+        char[] guess = guessINP.toCharArray();
+        Grader grade = new Grader();
+        int[] animalFold = grade.countCows(secret, guess);
+        if (animalFold[indexBulls] == winBulls) {
+            System.out.printf("Grade: %d bulls.\nCongrats! The secret code is %s.",
+                    animalFold[indexBulls], secretINP);
+        } else {
+            if (animalFold[indexBulls] == 0 && animalFold[indexCows] == 0) {
+                System.out.printf("Grade: None. The secret code is %s.\n",
+                        secretINP);
+                turn++;
+                run();
+            } else {
+                // Decided to go for switch statement, for the sake of code clarity. Too may if-statements would
+                // clutter code and make it harder to read.
+                switch (animalFold[indexBulls]) {
+                    case 0:
+                        System.out.printf("Grade: %d cow(s). The secret code is %s.\n",
+                                animalFold[indexCows], secretINP);
+                        turn++;
+                        run();
+                        break;
+                    default:
+                        System.out.printf("Grade: %d bull(s) %d cow(s). The secret code is %s.\n",
+                                animalFold[indexBulls], animalFold[indexCows], secretINP);
+                        turn++;
+                        run();
+                        break;
+                }
+            }
+        }
+    }
+
+    public static String getInput() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
 }

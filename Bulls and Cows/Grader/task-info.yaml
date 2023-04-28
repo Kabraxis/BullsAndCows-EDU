@@ -177,6 +177,12 @@ files:
         }
     }
   learner_created: false
-feedback_link: https://hyperskill.org/projects/53/stages/288/implement#comment
-status: Unchecked
-record: -1
+- name: src/bullscows/Grader.java
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/5430#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Fri, 28 Apr 2023 23:01:30 UTC"
+record: 2
