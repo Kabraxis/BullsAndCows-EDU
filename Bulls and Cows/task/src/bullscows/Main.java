@@ -15,7 +15,6 @@ public class Main {
 
     protected static void run() {
         char[] secret = secretINP.toCharArray();
-        // Getting input from a different method seems to prevent from unwanted prompts for input.
         String guessINP = getInput();
         char[] guess = guessINP.toCharArray();
         Grader grade = new Grader();
@@ -24,14 +23,14 @@ public class Main {
             System.out.printf("Grade: %d bulls.\nCongrats! The secret code is %s.",
                     animalFold[indexBulls], secretINP);
         } else {
+            // TODO: implement turn increase + message
+            // TODO: need to fix the recursive call issue
             if (animalFold[indexBulls] == 0 && animalFold[indexCows] == 0) {
                 System.out.printf("Grade: None. The secret code is %s.\n",
                         secretINP);
                 turn++;
                 run();
             } else {
-                // Decided to go for switch statement, for the sake of code clarity. Too may if-statements would
-                // clutter code and make it harder to read.
                 switch (animalFold[indexBulls]) {
                     case 0:
                         System.out.printf("Grade: %d cow(s). The secret code is %s.\n",
