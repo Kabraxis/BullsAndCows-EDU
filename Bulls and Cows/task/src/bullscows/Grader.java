@@ -1,32 +1,43 @@
 package bullscows;
 
 /**
- * Secret code vs. guessed code comparison is the only task for this class.
+ *  * ~~Class description~~
+ * Secret code vs. guessed code comparison.
  */
 class Grader {
-    private int bulls = 0;
-    private int cows = 0;
+
+    private int bulls;
+    private int cows;
 
     // A bull is, if the guessed number is at the same position of the generated number.
     // Whereas a cow is, if the guessed number is part of the generated number, but only at the wrong place.
-    protected int[] countCows(char[] secret, char[] guess) {
-        for (int i = 0; i < secret.length; i++) {
-            for (int j = 0; j < guess.length; j++) {
-                if (secret[i] == guess[j] && i == j) {
+    protected void gradeGuess(String secretCode, String guess) {
+        // Reset bulls and cows ever guess. This flushes results of previous turn.
+        bulls = 0;
+        cows = 0;
+        for (int i = 0; i < secretCode.length(); i++) {
+            for (int j = 0; j < guess.length(); j++) {
+                if (secretCode.charAt(i) == guess.charAt(j) && i == j) {
                     bulls++;
                 }
-
-                if (secret[i] == guess[j]) {
+                if (secretCode.charAt(i) == guess.charAt(j)) {
                     cows++;
                 }
             }
         }
 
-        // Returns a new array, index 0 equals to bulls, index 1 equals to cows detected in user's guess.
-        // The evaluation for cows is: if cows >= bulls, then the value of cows is return cows - bulls, else return
-        // the value of cows directly.
-        // This is required, so bulls won't get count as cows.
-        return new int[]{bulls, cows >= bulls ? cows - bulls : cows};
+        // Prevent counting bulls as cows
+        if (cows >= bulls) {
+            cows -= bulls;
+        }
+    }
+
+    public int getBulls() {
+        return bulls;
+    }
+
+    public int getCows() {
+        return cows;
     }
 
 }

@@ -1,16 +1,5 @@
 type: edu
 files:
-- name: src/bullscows/Main.java
-  visible: true
-  text: |
-    package bullscows;
-
-    public class Main {
-        public static void main(String[] args) {
-            System.out.println("Hello World!");
-        }
-    }
-  learner_created: false
 - name: test/BullsCowsTest.java
   visible: false
   text: |-
@@ -308,124 +297,21 @@ files:
         }
     }
   learner_created: false
+- name: src/bullscows/Main.java
+  visible: true
+  learner_created: true
 - name: src/bullscows/Grader.java
   visible: true
-  text: |-
-    package bullscows;
-
-    /**
-     * Secret code vs. guessed code comparison is the only task for this class.
-     */
-    class Grader {
-        private int bulls = 0;
-        private int cows = 0;
-
-        // A bull is, if the guessed number is at the same position of the generated number.
-        // Whereas a cow is, if the guessed number is part of the generated number, but only at the wrong place.
-        protected int[] countCows(char[] secret, char[] guess) {
-            for (int i = 0; i < secret.length; i++) {
-                for (int j = 0; j < guess.length; j++) {
-                    if (secret[i] == guess[j] && i == j) {
-                        bulls++;
-                    }
-
-                    if (secret[i] == guess[j]) {
-                        cows++;
-                    }
-                }
-            }
-
-            // Returns a new array, index 0 equals to bulls, index 1 equals to cows detected in user's guess.
-            // The evaluation for cows is: if cows >= bulls, then the value of cows is return cows - bulls, else return
-            // the value of cows directly.
-            // This is required, so bulls won't get count as cows.
-            return new int[]{bulls, cows >= bulls ? cows - bulls : cows};
-        }
-
-    }
   learner_created: true
 - name: src/bullscows/SecretCodeGenerator.java
   visible: true
-  text: |
-    package bullscows;
-
-    import java.util.Random;
-
-    /**
-     * ~~Class description~~
-     * This class has the task of generating a new secret code of a user-given length, which than has to be guessed in the
-     * Bulls and Cows game.
-     */
-
-    class SecretCodeGenerator {
-        private int codeGivenSize;
-
-        // Create getSecretCode and createCode are separated from each other to maintain re-usability.
-        // This way, adjustCodeLength can be utilized createCode to generate an additional secret code,
-        // if the first one is too small.
-        protected String getSecretCode(int codeGivenSize) {
-            this.codeGivenSize = codeGivenSize;
-            while (this.codeGivenSize > 10) {
-                System.out.printf("Error: can't generate a secret number with a length of %d because " +
-                        "there aren't enough unique digits.\n", codeGivenSize);
-                this.codeGivenSize = Integer.parseInt(Main.getInput());
-            }
-            StringBuilder randomCode = createCode();
-            while (randomCode.length() != this.codeGivenSize) {
-                assureCodeLength(randomCode);
-            }
-            return randomCode.toString();
-        }
-
-        // Creates a new secret code of codeGivenLength, and only contains unique numbers.
-        // Code length is not affected, so there are more digits to choose if a second code for spare numbers is needed.
-        private StringBuilder createCode() {
-            StringBuilder code = new StringBuilder(getPseudoRandomNumberString());
-            deleteDuplicates(code);
-            return code;
-        }
-
-        // Inner loop compares all the other characters to the character of the outer loop.
-        // It runs backwards to prevent skipping indices after deletion.
-        private void deleteDuplicates(StringBuilder generatedCode) {
-            for (int i = 0; i < generatedCode.length(); i++) {
-                for (int j = generatedCode.length() - 1; j > i; j--) {
-                    if (generatedCode.charAt(i) == generatedCode.charAt(j)) {
-                        generatedCode.deleteCharAt(j);
-                    }
-                }
-            }
-        }
-
-        private void assureCodeLength(StringBuilder generatedCode) {
-            if (generatedCode.length() > codeGivenSize) {
-                shortenCode(generatedCode);
-            } else {
-                extendCode(generatedCode);
-            }
-        }
-
-        private void shortenCode(StringBuilder generatedCode) {
-            generatedCode.delete(codeGivenSize, generatedCode.length());
-        }
-
-        private void extendCode(StringBuilder generatedCode) {
-            StringBuilder spareRandomCode = createCode();
-            generatedCode.append(spareRandomCode);
-            deleteDuplicates(generatedCode);
-        }
-
-        private String getPseudoRandomNumberString() {
-            int minValue = (int) Math.pow(10, this.codeGivenSize - 1); // Calculate maximum value based on codeGivenSize.
-            int maxValue = (int) Math.pow(10, this.codeGivenSize) - 1; // Calculate minimum value based on codeGivenSize.
-            Random random = new Random();
-            int randomNumber = random.nextInt(maxValue - minValue + 1) + minValue; // Generate random number in range
-            System.out.println(randomNumber);
-            return String.valueOf(randomNumber);
-        }
-
-    }
+  learner_created: true
+- name: src/bullscows/Engine.java
+  visible: true
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5434#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 16 Aug 2023 22:27:40 UTC"
 record: 6
