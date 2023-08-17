@@ -43,5 +43,4 @@ class SecretCodeGenerator {
         return alphanumericCopy;
     }
 
-
 }

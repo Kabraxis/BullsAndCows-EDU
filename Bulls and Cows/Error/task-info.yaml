@@ -1,17 +1,6 @@
 type: edu
 custom_name: Error!
 files:
-- name: src/bullscows/Main.java
-  visible: true
-  text: |
-    package bullscows;
-
-    public class Main {
-        public static void main(String[] args) {
-            System.out.println("Hello World!");
-        }
-    }
-  learner_created: false
 - name: test/BullsCowsTest.java
   visible: false
   text: |-
@@ -408,6 +397,22 @@ files:
         }
     }
   learner_created: false
+- name: src/bullscows/SecretCodeGenerator.java
+  visible: true
+  learner_created: true
+- name: src/bullscows/Main.java
+  visible: true
+  learner_created: true
+- name: src/bullscows/Engine.java
+  visible: true
+  learner_created: true
+- name: src/bullscows/Grader.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5435#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Thu, 17 Aug 2023 22:52:13 UTC"
 record: -1

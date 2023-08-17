@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 /**
  * ~~Class description~~
+ * <p>
  * The game gets initialized and executed here. User input will be taken.
  * WARNING: There is no input safety check!
  * Wrong input, like letters instead of numbers will likely crash the application.
@@ -12,43 +13,74 @@ import java.util.Scanner;
  * <p>
  * <p>
  * ~~Task description~~
- * Some players need a challenge, so let's make the secret code in the game harder to guess. Add support for more than 10
- * symbols by adding letters. Now, the secret code can contain the numbers 0-9 and the lowercase Latin characters a-z.
- * The new maximum length for the code is 36. Note that the length of the secret word may not match the number of possible
- * characters in the secret code, so you should request input twice: once for the secret code length and once for the
- * number of possible characters.
+ * <p>
+ * There are a lot of error possibilities. What if someone enters an answer of the wrong length? Or the number of
+ * possible symbols is less than the length of the code? What if the answer contains invalid symbols? The game may crash
+ * before the secret number was guessed!
+ * <p>
+ * Let's handle errors like this. At this point, you can implement this without the try catch construction. Use the
+ * following rule of thumb: if you can avoid the exception-based logic, avoid it! If you use exceptions in normal
+ * situations, how would you deal with unusual (exceptional) situations? Now it may not seem that important, but when
+ * you need to find errors in more complex programs, this makes a difference.
  * <p>
  * ~~Objectives~~
- * In this step, your program should:
  * <p>
- * 1. Ask for the length of the secret code.
- * 2. Ask for the range of possible characters in the secret code.
- * 3. Generate a secret code using numbers and characters. This time, you should also print the secret code using *
- * characters and print, which characters were used to generate the secret code.
- * 4. Function as a fully playable game.
+ * In this stage, your program should:
  * <p>
+ * 1. Handle incorrect input.
+ * 2.Print an error message that contains the word error. After that, don't ask for the numbers again, just finish the
+ * program.
  * <p>
  * ~~Example~~
+ * <p>
  * The greater-than symbol followed by a space > represents the user input. Note that it's not part of the input.
+ * <p>
+ * Example 1
+ * <p>
+ * Input the length of the secret code:
+ * > 6
+ * Input the number of possible symbols in the code:
+ * > 5
+ * Error: it's not possible to generate a code with a length of 6 with 5 unique symbols.
+ * <p>
+ * Example 2
+ * <p>
+ * Input the length of the secret code:
+ * > abc 0 -7
+ * Error: "abc 0 -7" isn't a valid number.
+ * <p>
+ * Example 3
+ * <p>
+ * Input the length of the secret code:
+ * > 6
+ * Input the number of possible symbols in the code:
+ * > 37
+ * Error: maximum number of possible symbols in the code is 36 (0-9, a-z).
+ * <p>
+ * Example 4
  * <p>
  * Input the length of the secret code:
  * > 4
  * Input the number of possible symbols in the code:
- * > 16
- * The secret is prepared: **** (0-9, a-f).
+ * > 12
+ * The secret is prepared: **** (0-9, a-b).
  * Okay, let's start a game!
  * Turn 1:
- * > 1a34
+ * > a234
  * Grade: 1 bull and 1 cow
  * Turn 2:
- * > b354
+ * > 73b4
  * Grade: 2 bulls and 1 cow
  * Turn 3:
- * > 93b4
+ * > 9374
  * Grade: 4 bulls
  * Congratulations! You guessed the secret code.
  */
 public class Engine {
+    final int MIN_CODE_LENGTH = 1;
+    final int MAX_SYMBOLS = 36;
+    final String VALID_SYMBOLS = "^[a-z0-9]+$";
+    final String NUMBERS_ONLY = "\\d+";
     int turn = 1;
     int codeLength;
     int codeComplexity;
@@ -78,33 +110,21 @@ public class Engine {
 
     private int askCodeLength() {
         System.out.println("Input the length of the secret code:");
-
-        int length = Integer.parseInt(getInput());
-
-        while (length > 36) {
-            System.out.println("Error: can't generate a secret with a length above 36 because there aren't enough" +
-                    " unique characters.");
-            System.out.println("Please enter a number not greater than 36.");
-            System.out.println("Input the number of possible symbols in the code:");
-            length = Integer.parseInt(getInput());
-        }
-
+        String input = askInputReturnString();
+        exitForInputNotNumbers(input);
+        int length = Integer.parseInt(input);
+        exitForCodeLengthBelowMinimum(length);
+        exitForCodeLengthExceedMaxSymbols(length);
         return length;
     }
 
     private int askCodeComplexity() {
         System.out.println("Input the number of possible symbols in the code:");
-
-        int complexity = Integer.parseInt(getInput());
-
-        while (complexity > 36) {
-            System.out.println("Error: can't generate a secret with a length above 36 because there aren't enough" +
-                    " unique characters.");
-            System.out.println("Please enter a number not greater than 36.");
-            System.out.println("Input the number of possible symbols in the code:");
-            complexity = Integer.parseInt(getInput());
-        }
-
+        String input = askInputReturnString();
+        exitForInputNotNumbers(input);
+        int complexity = Integer.parseInt(input);
+        exitForCodeComplexityNotEqualCodeLength(complexity);
+        exitForCodeLengthExceedMaxSymbols(complexity);
         return complexity;
     }
 
@@ -115,7 +135,10 @@ public class Engine {
         while (true) {
             System.out.printf("Turn %d: \n",
                     turn);
-            guess = getInput();
+            guess = askInputReturnString();
+            exitForGuessContainingInvalidSymbols(guess);
+            exitForGuessLengthNotEqualCodeLength(guess);
+
             grader.gradeGuess(secretCode, guess);
 
             int bulls = grader.getBulls();
@@ -128,13 +151,13 @@ public class Engine {
 
             StringBuilder gradeMsg = getStringBuilder(bulls, cows);
 
-            System.out.println("Grade: " + gradeMsg + ".");
+            System.out.println("Grade: " + gradeMsg);
             turn++;
         }
     }
 
     // Determine the grading message based on the number of bulls and cows.
-    private static StringBuilder getStringBuilder(int bulls, int cows) {
+    private StringBuilder getStringBuilder(int bulls, int cows) {
         StringBuilder gradeMsg = new StringBuilder();
 
         if (bulls > 0) {
@@ -160,8 +183,52 @@ public class Engine {
         return gradeMsg;
     }
 
-    private String getInput() {
+    private String askInputReturnString() {
         return new Scanner(System.in).nextLine();
+    }
+
+    // Warning: Danger Zone!
+    // These methods are responsible for the conditions under which the program should terminate.
+    private void exitForGuessLengthNotEqualCodeLength(String guess) {
+        if (guess.length() != codeLength) {
+            System.out.println("Error: guess must have the same amount of characters as the secret code.");
+        }
+    }
+
+    private void exitForCodeComplexityNotEqualCodeLength(int complexity) {
+        if (complexity < codeLength) {
+            System.out.printf("Error: it's not possible to generate a code with a length of %d with %d unique symbols.",
+                    codeLength, complexity);
+            System.exit(0);
+        }
+    }
+
+    private void exitForCodeLengthExceedMaxSymbols(int length) {
+        if (length > MAX_SYMBOLS) {
+            System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+            System.exit(0);
+        }
+    }
+
+    private void exitForGuessContainingInvalidSymbols(String guess) {
+        if (!guess.matches(VALID_SYMBOLS)) {
+            System.out.printf("Error: \"%s\" contains invalid characters (0-9, a-z).", guess);
+            System.exit(0);
+        }
+    }
+
+    private void exitForInputNotNumbers(String input) {
+        if (!input.matches(NUMBERS_ONLY)) {
+            System.out.printf("Error: \"%s\" isn't a valid number.", input);
+            System.exit(0);
+        }
+    }
+
+    private void exitForCodeLengthBelowMinimum(int length) {
+        if (length < MIN_CODE_LENGTH) {
+            System.out.println("Error: code length must be at least 1");
+            System.exit(0);
+        }
     }
 
 }
